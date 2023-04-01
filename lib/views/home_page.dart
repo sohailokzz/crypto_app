@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import '../models/coin_model.dart';
+import '../services/api_const.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -8,6 +11,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    getCoinMarket();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     double myHeight = MediaQuery.of(context).size.height;
@@ -142,6 +151,20 @@ class _HomePageState extends State<HomePage> {
                           )
                         ],
                       ),
+                      Expanded(
+                        child: isRefreshing == true
+                            ? const Center(
+                                child: CircularProgressIndicator(
+                                  color: Color(0xffFBC700),
+                                ),
+                              )
+                            : ListView.builder(
+                                itemCount: coinMarket!.length,
+                                itemBuilder: (context, index) {
+                                  return const Text('data');
+                                },
+                              ),
+                      )
                     ],
                   ),
                 ),
@@ -151,5 +174,36 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  bool isRefreshing = true;
+
+  List? coinMarket = [];
+  var coinMarketList;
+
+  Future<List<CoinModel>?> getCoinMarket() async {
+    setState(() {
+      isRefreshing = true;
+    });
+    var response = await http.get(
+      Uri.parse(url),
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      },
+    );
+    setState(() {
+      isRefreshing = false;
+    });
+    if (response.statusCode == 200) {
+      var x = response.body;
+      coinMarketList = coinModelFromJson(x);
+      setState(() {
+        coinMarket = coinMarketList;
+      });
+    } else {
+      print(response.statusCode);
+    }
+    return null;
   }
 }
