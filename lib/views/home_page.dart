@@ -1,3 +1,4 @@
+import 'package:crypto_app/views/components/coins_items.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../models/coin_model.dart';
@@ -128,16 +129,16 @@ class _HomePageState extends State<HomePage> {
                     topRight: Radius.circular(50),
                   ),
                 ),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: myWidth * 0.08,
-                  ),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: myHeight * 0.03,
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: myHeight * 0.03,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: myWidth * 0.08,
                       ),
-                      Row(
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: const [
                           Text(
@@ -151,22 +152,24 @@ class _HomePageState extends State<HomePage> {
                           )
                         ],
                       ),
-                      Expanded(
-                        child: isRefreshing == true
-                            ? const Center(
-                                child: CircularProgressIndicator(
-                                  color: Color(0xffFBC700),
-                                ),
-                              )
-                            : ListView.builder(
-                                itemCount: coinMarket!.length,
-                                itemBuilder: (context, index) {
-                                  return const Text('data');
-                                },
+                    ),
+                    Expanded(
+                      child: isRefreshing == true
+                          ? const Center(
+                              child: CircularProgressIndicator(
+                                color: Color(0xffFBC700),
                               ),
-                      )
-                    ],
-                  ),
+                            )
+                          : ListView.builder(
+                              itemCount: coinMarket!.length,
+                              itemBuilder: (context, index) {
+                                return CoinItems(
+                                  item: coinMarket![index],
+                                );
+                              },
+                            ),
+                    )
+                  ],
                 ),
               ),
             ],
