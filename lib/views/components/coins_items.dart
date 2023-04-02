@@ -80,7 +80,7 @@ class CoinItems extends StatelessWidget {
             ),
           ),
           SizedBox(
-            width: myWidth * 0.05,
+            width: myWidth * 0.02,
           ),
           Expanded(
             flex: 2,
@@ -97,7 +97,12 @@ class CoinItems extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      item.priceChange24H.toStringAsFixed(2),
+                      item.priceChange24H.toString().contains('-')
+                          ? item.priceChange24H
+                              .toStringAsFixed(2)
+                              .toString()
+                              .replaceAll('-', '')
+                          : item.priceChange24H.toStringAsFixed(2),
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.normal,
@@ -105,14 +110,16 @@ class CoinItems extends StatelessWidget {
                       ),
                     ),
                     SizedBox(
-                      width: myWidth * 0.03,
+                      width: myWidth * 0.01,
                     ),
                     Text(
                       item.marketCapChangePercentage24H.toStringAsFixed(2),
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.normal,
-                        color: Colors.grey,
+                        color: item.marketCapChangePercentage24H >= 0
+                            ? Colors.green
+                            : Colors.red,
                       ),
                     ),
                   ],

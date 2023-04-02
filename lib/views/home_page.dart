@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../models/coin_model.dart';
 import '../services/api_const.dart';
+import 'components/coin_item2.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -161,6 +162,8 @@ class _HomePageState extends State<HomePage> {
                               ),
                             )
                           : ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
                               itemCount: coinMarket!.length,
                               itemBuilder: (context, index) {
                                 return CoinItems(
@@ -168,6 +171,44 @@ class _HomePageState extends State<HomePage> {
                                 );
                               },
                             ),
+                    ),
+                    SizedBox(
+                      height: myHeight * 0.02,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: myWidth * 0.08,
+                      ),
+                      child: Row(
+                        children: const [
+                          Text(
+                            'Recomended to buy',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: myHeight * 0.02,
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: myWidth * 0.02,
+                        ),
+                        child: ListView.builder(
+                          itemCount: coinMarket!.length,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            return CoinItem2(
+                              item: coinMarket![index],
+                            );
+                          },
+                        ),
+                      ),
                     )
                   ],
                 ),
