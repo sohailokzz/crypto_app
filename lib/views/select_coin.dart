@@ -1,4 +1,9 @@
+import 'dart:convert';
+
+import 'package:crypto_app/models/chart_model.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class SelectCoin extends StatefulWidget {
   final dynamic selectItem;
@@ -12,6 +17,18 @@ class SelectCoin extends StatefulWidget {
 }
 
 class _SelectCoinState extends State<SelectCoin> {
+  late TrackballBehavior trackballBehavior;
+
+  @override
+  void initState() {
+    getChart();
+    trackballBehavior = TrackballBehavior(
+      enable: true,
+      activationMode: ActivationMode.singleTap,
+    );
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     double myHeight = MediaQuery.of(context).size.height;
@@ -168,10 +185,101 @@ class _SelectCoinState extends State<SelectCoin> {
                   ),
                 ],
               ),
+            ),
+            SizedBox(
+              height: myHeight * 0.4,
+              child: SfCartesianChart(
+                trackballBehavior: trackballBehavior,
+                zoomPanBehavior: ZoomPanBehavior(
+                  enablePanning: true,
+                  zoomMode: ZoomMode.x,
+                ),
+                series: <CandleSeries>[
+                  CandleSeries<ChartModel, int>(
+                    enableSolidCandles: true,
+                    enableTooltip: true,
+                    bullColor: Colors.green,
+                    bearColor: Colors.red,
+                    dataSource: itemChart,
+                    xValueMapper: (ChartModel sales, _) => sales.time,
+                    lowValueMapper: (ChartModel sales, _) => sales.low,
+                    highValueMapper: (ChartModel sales, _) => sales.high,
+                    openValueMapper: (ChartModel sales, _) => sales.open,
+                    closeValueMapper: (ChartModel sales, _) => sales.close,
+                    animationDuration: 55,
+                  )
+                ],
+              ),
             )
           ],
         ),
       ),
     );
+  }
+
+  List<String> text = ['D', 'W', 'M', '3M', '6M', 'Y'];
+  List<bool> textBool = [false, false, true, false, false, false];
+
+  int days = 30;
+
+  setDays(String txt) {
+    if (txt == 'D') {
+      setState(() {
+        days = 1;
+      });
+    } else if (txt == 'W') {
+      setState(() {
+        days = 7;
+      });
+    } else if (txt == 'M') {
+      setState(() {
+        days = 30;
+      });
+    } else if (txt == '3M') {
+      setState(() {
+        days = 90;
+      });
+    } else if (txt == '6M') {
+      setState(() {
+        days = 180;
+      });
+    } else if (txt == 'Y') {
+      setState(() {
+        days = 365;
+      });
+    }
+  }
+
+  bool isRefresh = true;
+  List<ChartModel> itemChart = [];
+  Future<void> getChart() async {
+    String url =
+        '${'https://api.coingecko.com/api/v3/coins/' + widget.selectItem.id}/ohlc?vs_currency=usd&days=$days';
+
+    setState(() {
+      isRefresh = true;
+    });
+
+    var response = await http.get(Uri.parse(url), headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+    });
+
+    try {
+      if (response.statusCode == 200) {
+        Iterable x = jsonDecode(response.body);
+        List<ChartModel> modelList =
+            x.map((e) => ChartModel.fromJson(e)).toList();
+        setState(() {
+          itemChart = modelList;
+        });
+      }
+    } catch (e) {
+      rethrow;
+    }
+
+    setState(() {
+      isRefresh = false;
+    });
   }
 }

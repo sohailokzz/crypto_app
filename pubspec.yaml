@@ -15,6 +15,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   http: ^0.13.5
   chart_sparkline: ^1.0.13
+  syncfusion_flutter_charts: ^21.1.39
 
 dev_dependencies:
   flutter_test:
