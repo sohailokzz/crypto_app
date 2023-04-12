@@ -187,30 +187,203 @@ class _SelectCoinState extends State<SelectCoin> {
               ),
             ),
             SizedBox(
+              height: myHeight * 0.01,
+            ),
+            SizedBox(
               height: myHeight * 0.4,
-              child: SfCartesianChart(
-                trackballBehavior: trackballBehavior,
-                zoomPanBehavior: ZoomPanBehavior(
-                  enablePanning: true,
-                  zoomMode: ZoomMode.x,
+              child: isRefresh == true
+                  ? const Center(
+                      child: CircularProgressIndicator.adaptive(
+                        backgroundColor: Colors.black26,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          Color(0xffFBC700),
+                        ),
+                      ),
+                    )
+                  : SfCartesianChart(
+                      trackballBehavior: trackballBehavior,
+                      zoomPanBehavior: ZoomPanBehavior(
+                        enablePanning: true,
+                        zoomMode: ZoomMode.x,
+                      ),
+                      series: <CandleSeries>[
+                        CandleSeries<ChartModel, int>(
+                          enableSolidCandles: true,
+                          enableTooltip: true,
+                          bullColor: Colors.green,
+                          bearColor: Colors.red,
+                          dataSource: itemChart,
+                          xValueMapper: (ChartModel sales, _) => sales.time,
+                          lowValueMapper: (ChartModel sales, _) => sales.low,
+                          highValueMapper: (ChartModel sales, _) => sales.high,
+                          openValueMapper: (ChartModel sales, _) => sales.open,
+                          closeValueMapper: (ChartModel sales, _) =>
+                              sales.close,
+                          animationDuration: 55,
+                        )
+                      ],
+                    ),
+            ),
+            SizedBox(
+              height: myHeight * 0.01,
+            ),
+            Center(
+              child: SizedBox(
+                height: myHeight * 0.04,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  shrinkWrap: true,
+                  itemCount: text.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          textBool = [false, false, false, false, false, false];
+                          textBool[index] = true;
+                        });
+                        setDays(
+                          text[index],
+                        );
+                        getChart();
+                      },
+                      child: Container(
+                        margin:
+                            EdgeInsets.symmetric(horizontal: myWidth * 0.02),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: myWidth * 0.03,
+                          vertical: myHeight * 0.005,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: textBool[index] == true
+                              ? const Color(0xffFBC700).withOpacity(0.3)
+                              : Colors.transparent,
+                        ),
+                        child: Text(
+                          text[index],
+                          style: const TextStyle(
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 ),
-                series: <CandleSeries>[
-                  CandleSeries<ChartModel, int>(
-                    enableSolidCandles: true,
-                    enableTooltip: true,
-                    bullColor: Colors.green,
-                    bearColor: Colors.red,
-                    dataSource: itemChart,
-                    xValueMapper: (ChartModel sales, _) => sales.time,
-                    lowValueMapper: (ChartModel sales, _) => sales.low,
-                    highValueMapper: (ChartModel sales, _) => sales.high,
-                    openValueMapper: (ChartModel sales, _) => sales.open,
-                    closeValueMapper: (ChartModel sales, _) => sales.close,
-                    animationDuration: 55,
+              ),
+            ),
+            SizedBox(
+              height: myHeight * 0.04,
+            ),
+            Expanded(
+              child: ListView(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: myWidth * 0.06,
+                    ),
+                    child: const Text(
+                      'News',
+                      style: TextStyle(fontSize: 25),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: myWidth * 0.06,
+                      vertical: myHeight * 0.01,
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Expanded(
+                          child: Text(
+                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+                            textAlign: TextAlign.justify,
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 17,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: myWidth * 0.25,
+                          child: CircleAvatar(
+                            radius: myHeight * 0.04,
+                            backgroundImage:
+                                const AssetImage('assets/image/11.PNG'),
+                          ),
+                        )
+                      ],
+                    ),
                   )
                 ],
               ),
-            )
+            ),
+            SizedBox(
+              height: myHeight * 0.1,
+              width: myWidth,
+              // color: Colors.amber,
+              child: Column(
+                children: [
+                  const Divider(),
+                  SizedBox(
+                    height: myHeight * 0.01,
+                  ),
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: myWidth * 0.05,
+                      ),
+                      Expanded(
+                        flex: 5,
+                        child: Container(
+                          padding:
+                              EdgeInsets.symmetric(vertical: myHeight * 0.015),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50),
+                              color: const Color(0xffFBC700)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.add,
+                                size: myHeight * 0.02,
+                              ),
+                              const Text(
+                                'Add to portfolio',
+                                style: TextStyle(fontSize: 20),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: myWidth * 0.05,
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            vertical: myHeight * 0.012,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            color: Colors.grey.withOpacity(0.2),
+                          ),
+                          child: Image.asset(
+                            'assets/icons/3.1.png',
+                            height: myHeight * 0.03,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: myWidth * 0.05,
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
           ],
         ),
       ),
