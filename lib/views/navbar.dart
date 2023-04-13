@@ -1,21 +1,22 @@
+import 'package:crypto_app/views/another_page.dart';
 import 'package:crypto_app/views/home_page.dart';
 import 'package:flutter/material.dart';
 
-class NavBar extends StatefulWidget {
-  const NavBar({super.key});
+class MainView extends StatefulWidget {
+  const MainView({super.key});
 
   @override
-  State<NavBar> createState() => _NavBarState();
+  State<MainView> createState() => _MainViewState();
 }
 
-class _NavBarState extends State<NavBar> {
+class _MainViewState extends State<MainView> {
   int _currentIndex = 0;
 
   List<Widget> pages = [
     const HomePage(),
-    const HomePage(),
-    const HomePage(),
-    const HomePage(),
+    const AnotherPage(),
+    const AnotherPage(),
+    const AnotherPage(),
   ];
   @override
   Widget build(BuildContext context) {

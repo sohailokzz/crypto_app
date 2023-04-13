@@ -1,4 +1,4 @@
-import 'package:crypto_app/views/splash.dart';
+import 'package:crypto_app/views/io.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       title: 'Crypto App',
       debugShowCheckedModeBanner: false,
-      home: Splash(),
+      home: IO(),
     );
   }
 }
